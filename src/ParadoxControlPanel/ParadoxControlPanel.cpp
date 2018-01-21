@@ -223,23 +223,7 @@ bool ParadoxControlPanel::armArea(QueueItem item,
 bool ParadoxControlPanel::keepAlive() {
   PRINTLN("Paradox: Keeping session alive.");
 
-  //   GET /keep_alive.html?msgid=1&7886282355404697 HTTP/1.1
-  // Host: 192.168.1.123
-  // Connection: keep-alive
-  // User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2)
-  // AppleWebKit/537.36 (KHTML, like Gecko)
-  // Chrome/63.0.3239.132 Safari/537.36
-  // Accept: */*
-  // Referer: http://192.168.1.123/menu.html
-  // Accept-Encoding: gzip, deflate
-  // Accept-Language: bg,en-US;q=0.9,en;q=0.8
-  //
-  // HTTP/1.0 200 OK
-  // Server: lwIP/1.4.0 (http://savannah.nongnu.org/projects/lwip)
-  // Content-type: text/html
-  // Cache-control: no-cache
-  //
-  // { "ack":[{ "msgtype":"1", "action":"keepalive"}]}
+  // FIXME:  Implement me
   return true;
 }
 
