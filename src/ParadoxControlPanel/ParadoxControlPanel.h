@@ -48,6 +48,7 @@ public:
   void          queueActionAdd(QueueItem& item);
   String        getLatestAreasInfo();
   static String getAreaStatusFriendlyName(uint8_t status);
+  static bool   getAreaStatusIsArmed(uint8_t status);
 
 private:
 

@@ -5,7 +5,6 @@
 #include <ESPWifiClient.h>
 #include <RemotePrint.h>
 #include "settings.h"
-#include "CommonConfig.h"
 #include <ParadoxControlPanel/ParadoxControlPanel.h>
 
 ESPWifiClient *wifiClient = new ESPWifiClient(WIFI_SSID, WIFI_PASS);
@@ -22,6 +21,7 @@ MqttClient *mqttClient = NULL;
 
 void publishStatus(const char *messageId = "", bool force = false, const char *areaName = "") {
   if (force == true) {
+    int areaStatus          = 2; // armed
     const size_t bufferSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2);
     DynamicJsonBuffer jsonBuffer(bufferSize);
     JsonObject& root        = jsonBuffer.createObject();
@@ -29,8 +29,9 @@ void publishStatus(const char *messageId = "", bool force = false, const char *a
     JsonArray & areasStatus = status.createNestedArray("areasStatus");
     JsonObject& area        = areasStatus.createNestedObject();
     area["name"]       = areaName;
-    area["status"]     = 2;                                                 // armed
-    area["statusName"] = ParadoxControlPanel::getAreaStatusFriendlyName(2); // armed
+    area["statusCode"] = areaStatus;
+    area["statusName"] = ParadoxControlPanel::getAreaStatusFriendlyName(areaStatus);
+    area["isArmed"]    = ParadoxControlPanel::getAreaStatusIsArmed(areaStatus);
 
     if (messageId != NULL) {
       root["messageId"] = messageId;

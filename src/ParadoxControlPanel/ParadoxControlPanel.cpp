@@ -346,17 +346,17 @@ bool ParadoxControlPanel::getStatus() {
       JsonObject& area = areasStatus.createNestedObject();
       area["name"]       = this->areasNameIndex.get(areaIndex - 1).name;
       area["id"]         = areaIndex;
-      area["status"]     = areaStatus;
-      area["statusName"] = ParadoxControlPanel::getAreaStatusFriendlyName(
-        areaStatus);
-      zonesInfo = &area.createNestedArray("zonesInfo");
+      area["statusCode"] = areaStatus;
+      area["statusName"] = ParadoxControlPanel::getAreaStatusFriendlyName(areaStatus);
+      area["isArmed"]    = ParadoxControlPanel::getAreaStatusIsArmed(areaStatus);
+      zonesInfo          = &area.createNestedArray("zonesInfo");
     }
     int zoneId           = (int)(idx / 2) + 1;
     uint8_t zoneStatus   = Utils::getValueInt(this->zonesStatusStr, zoneId - 1);
     JsonObject& zoneInfo = zonesInfo->createNestedObject();
     zoneInfo["name"]       = zoneName;
     zoneInfo["id"]         = zoneId;
-    zoneInfo["status"]     = zoneStatus;
+    zoneInfo["statusCode"] = zoneStatus;
     zoneInfo["statusName"] = ParadoxControlPanel::getZoneStatusFriendlyName(
       zoneStatus);
   }
@@ -489,6 +489,26 @@ bool ParadoxControlPanel::httpLoginWaitForModuleInit(int timeout,
   PRINTLN_E("Timeout reached. Last state: ");
   PRINTLN_E(loginStage)
   return false;
+}
+
+bool ParadoxControlPanel::getAreaStatusIsArmed(uint8_t status) {
+  switch (status) {
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 7:
+    case 10:
+      return true;
+    case 1:
+    case 6:
+    case 8:
+    case 9:
+      return false;
+    case 99: // buttype = "allarea";???
+    default:
+      return false;
+  }
 }
 
 String ParadoxControlPanel::getAreaStatusFriendlyName(uint8_t status) {
