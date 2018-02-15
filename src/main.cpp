@@ -55,7 +55,11 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   PRINT(topic);
   PRINTLN("] ");
 
-  String payloadString = String((char *)payload);
+  // Convert the payload to string
+  char spayload[length + 1];
+  memcpy(spayload, payload, length);
+  spayload[length] = '\0';
+  String payloadString = String(spayload);
 
   // Do something according the topic
   if (strcmp(topic, MQTT_TOPIC_SET) == 0) {
@@ -103,7 +107,6 @@ void setup() {
                               MQTT_SERVER_FINGERPRINT,
                               mqttCallback);
 
-  Serial.println(WIFI_SSID);
   wifiClient->init();
 }
 
@@ -120,6 +123,7 @@ void getControlPanelStatus() {
 }
 
 void loop() {
+  wifiClient->reconnectIfNeeded();
   RemotePrint::instance()->handle();
   fotaClient->loop();
   mqttClient->loop();
